@@ -1,10 +1,7 @@
-version: '3.8'
-
-
 services:
 
   postgres:
-    image: postgres:15
+    image: postgres:17
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -19,8 +16,6 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-    networks:
-      - app-network
 
   redis:
     image: redis:7-alpine
@@ -40,19 +35,18 @@ services:
     command: web
     volumes:
       - .:/app
-      - /app/
+      - venv_data:/app/.venv
+      - ./data:/data
     env_file:
       - .env
     ports:
       - "8000:8000"
     depends_on:
-      - db:
+      postgres:
         condition: service_healthy
-      - redis:
+      redis:
         condition: service_healthy
-    networks:
-      - app-network
-  
+
   celery:
     build:
       context: .
@@ -60,15 +54,17 @@ services:
     command: worker
     volumes:
       - .:/app
-      - /app/
+      - venv_data:/app/.venv
+      - ./data:/data
     env_file:
       - .env
     depends_on:
-      - postgres:
+      postgres:
         condition: service_healthy
-      - redis:
+      redis:
         condition: service_healthy
 
 volumes:
   postgres_data:
   redis_data:
+  venv_data:

@@ -1,9 +1,36 @@
 [project]
-name = "mailingservice"
+name = "mailing-service"
 version = "0.1.0"
-description = "Add your description here"
+description = "Django-based mailing service with XLSX import and async email sending via Celery"
 readme = "README.md"
-requires-python = "==3.10.*"
+requires-python = ">=3.10"
 dependencies = [
     "django>=5.2,<6",
+    "celery[redis]>=5.4,<6",
+    "openpyxl>=3.1,<4",
+    "psycopg[binary]>=3.2,<4",
+    "python-dotenv>=1.0,<2",
+    "structlog>=25.0,<26",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-django>=4.9",
+    "factory-boy>=3.3",
+    "ruff>=0.11",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 99
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "mailing_service.settings"
+pythonpath = ["mailing_service"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]

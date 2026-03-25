@@ -1,0 +1,14 @@
+.git
+.venv
+__pycache__
+*.pyc
+.env
+.ruff_cache
+.pytest_cache
+**/tests/
+.pre-commit-config.yaml
+data/
+*.md
+.github/
+env.example
+Makefile
