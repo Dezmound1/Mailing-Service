@@ -10,7 +10,7 @@ from mailings.tests.factories import MailingRecordFactory
 @pytest.mark.django_db
 class TestSendEmailTask:
     """Test the send_email task."""
-    
+
     @patch("mailings.services.email.time.sleep")
     def test_success_updates_status(self, mock_sleep):
         """Successful send should set status to SENT."""
