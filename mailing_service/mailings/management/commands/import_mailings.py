@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 from pathlib import Path
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand, CommandError, CommandParser
 
 from mailings.services.importer import import_from_xlsx
 
@@ -10,7 +12,7 @@ class Command(BaseCommand):
 
     help = "Import mailing records from an XLSX file and dispatch email tasks"
 
-    def add_arguments(self, parser):
+    def add_arguments(self, parser: CommandParser) -> None:
         """Define positional and optional command arguments."""
         parser.add_argument("file_path", type=str, help="Path to the XLSX file")
         parser.add_argument(
@@ -25,7 +27,7 @@ class Command(BaseCommand):
             help="Parse and validate without creating records or sending emails",
         )
 
-    def handle(self, *args, **options):
+    def handle(self, *args: object, **options: object) -> str | None:
         """Validate input file and run the import process."""
         file_path = Path(options["file_path"])
 

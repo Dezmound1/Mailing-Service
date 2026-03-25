@@ -6,6 +6,7 @@ from pathlib import Path
 import structlog
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from django.db import transaction
 from openpyxl import load_workbook
 
 from mailings.models import MailingRecord
@@ -80,18 +81,19 @@ def _save_batch(rows: list[dict[str, str]], stats: ImportStats, *, dry_run: bool
         stats.created += len(new_rows)
         return
 
-    MailingRecord.objects.bulk_create(
-        [MailingRecord(**r) for r in new_rows],
-        ignore_conflicts=True,
-    )
+    with transaction.atomic():
+        MailingRecord.objects.bulk_create(
+            [MailingRecord(**r) for r in new_rows],
+            ignore_conflicts=True,
+        )
+        created_qs = MailingRecord.objects.filter(
+            external_id__in=[r["external_id"] for r in new_rows],
+            status=MailingRecord.Status.PENDING,
+        )
+        stats.created += created_qs.count()
+        pks = list(created_qs.values_list("pk", flat=True))
 
-    created_qs = MailingRecord.objects.filter(
-        external_id__in=[r["external_id"] for r in new_rows],
-        status=MailingRecord.Status.PENDING,
-    )
-    stats.created += created_qs.count()
-
-    for pk in created_qs.values_list("pk", flat=True):
+    for pk in pks:
         send_email.delay(pk)
 
 

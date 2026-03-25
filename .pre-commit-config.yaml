@@ -12,3 +12,12 @@ repos:
 
       - id: ruff-check
         args: [--fix]
+
+  - repo: local
+    hooks:
+      - id: pytest-cov
+        name: tests with coverage (>=80%)
+        entry: uv run pytest --cov=mailings --cov-fail-under=80 -q
+        language: system
+        pass_filenames: false
+        always_run: true
