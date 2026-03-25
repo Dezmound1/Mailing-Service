@@ -2,16 +2,21 @@ from django.db import models
 
 
 class MailingRecord(models.Model):
+    """Model for storing mailing records."""
+
     class Status(models.TextChoices):
-        PENDING = "pending", "Pending"
-        SENT = "sent", "Sent"
-        FAILED = "failed", "Failed"
+        """Status choices for mailing records."""
+
+        PENDING = "pending"
+        SENT = "sent"
+        FAILED = "failed"
 
     external_id = models.CharField(max_length=255, unique=True, db_index=True)
     user_id = models.CharField(max_length=255)
     email = models.EmailField()
     subject = models.CharField(max_length=500)
     message = models.TextField()
+
     status = models.CharField(
         max_length=10,
         choices=Status.choices,

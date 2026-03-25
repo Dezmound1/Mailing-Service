@@ -11,6 +11,7 @@ logger = structlog.get_logger(__name__)
 
 @shared_task(bind=True, max_retries=3, retry_backoff=True)
 def send_email(self, mailing_record_id: int) -> None:
+    """Simulate email sending with random delay and update record status."""
     try:
         record = MailingRecord.objects.get(pk=mailing_record_id)
     except MailingRecord.DoesNotExist:

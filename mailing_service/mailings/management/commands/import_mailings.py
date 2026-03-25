@@ -1,13 +1,17 @@
 from pathlib import Path
 
 from django.core.management.base import BaseCommand, CommandError
+
 from mailings.services.importer import import_from_xlsx
 
 
 class Command(BaseCommand):
+    """Management command to import mailing records from XLSX."""
+
     help = "Import mailing records from an XLSX file and dispatch email tasks"
 
     def add_arguments(self, parser):
+        """Define positional and optional command arguments."""
         parser.add_argument("file_path", type=str, help="Path to the XLSX file")
         parser.add_argument(
             "--batch-size",
@@ -22,6 +26,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        """Validate input file and run the import process."""
         file_path = Path(options["file_path"])
 
         if not file_path.exists():
@@ -34,7 +39,7 @@ class Command(BaseCommand):
         batch_size = options["batch_size"]
 
         if dry_run:
-            self.stdout.write(self.style.WARNING("[DRY RUN] No records will be created\n"))  # type: ignore[attr-defined]
+            self.stdout.write(self.style.WARNING("[DRY RUN] No records will be created\n"))
 
         try:
             stats = import_from_xlsx(
@@ -56,4 +61,4 @@ class Command(BaseCommand):
             limit = min(10, len(stats.error_details))
             self.stdout.write(f"\nFirst {limit} errors:")
             for detail in stats.error_details[:limit]:
-                self.stdout.write(self.style.ERROR(f"  {detail}"))  # type: ignore[attr-defined]
+                self.stdout.write(self.style.ERROR(f"  {detail}"))

@@ -11,8 +11,6 @@ dependencies = [
     "psycopg[binary]>=3.2,<4",
     "python-dotenv>=1.0,<2",
     "structlog>=25.0,<26",
-    "dill>=0.4.1",
-    "zstandard>=0.25.0",
 ]
 
 [dependency-groups]
@@ -31,7 +29,7 @@ line-length = 99
 select = ["E", "F", "I", "N", "W", "UP"]
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "mailing_service.settings"
+DJANGO_SETTINGS_MODULE = "mailing_service.settings_test"
 pythonpath = ["mailing_service"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
