@@ -12,6 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.10.9" 
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -29,6 +34,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.10.9" 
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -39,6 +49,3 @@ jobs:
 
       - name: Run tests
         run: uv run pytest
-
-        if: failure()
-        run: exit 1
