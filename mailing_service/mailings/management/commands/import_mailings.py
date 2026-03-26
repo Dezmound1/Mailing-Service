@@ -29,7 +29,7 @@ class Command(BaseCommand):
 
     def handle(self, *args: object, **options: object) -> str | None:
         """Validate input file and run the import process."""
-        
+
         file_path = Path(options["file_path"])
 
         if not file_path.exists():
