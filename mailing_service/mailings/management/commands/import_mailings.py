@@ -29,6 +29,7 @@ class Command(BaseCommand):
 
     def handle(self, *args: object, **options: object) -> str | None:
         """Validate input file and run the import process."""
+        
         file_path = Path(options["file_path"])
 
         if not file_path.exists():
@@ -38,7 +39,9 @@ class Command(BaseCommand):
             raise CommandError(f"Expected .xlsx file, got '{file_path.suffix}'")
 
         dry_run = options["dry_run"]
+
         batch_size = options["batch_size"]
+        self.stdout.write(f"Importing {file_path} with batch size {batch_size}")
 
         if dry_run:
             self.stdout.write(self.style.WARNING("[DRY RUN] No records will be created\n"))
